@@ -11,10 +11,6 @@ A GitHub Action to test mobile applications (Android, iOS) using Firebase Test L
 
 <br>
 
-Inspired by the 2020 [GitHub Actions Hackathon.](https://github.community/t5/Events/Featured-Event-GitHub-Actions-Hackathon/td-p/48206)
-
-<br>
-
 ## Introduction
 
 Testing mobile applications can be a challenge. With Firebase Test Lab, testing becomes much easier whether it's validating new changes on a continuous integration (CI) pipeline or tracking down bugs on specific devices. This GitHub Action automates the setup of the gcloud command line tool and provides an easy interface to start testing quickly.
@@ -27,11 +23,34 @@ Testing mobile applications can be a challenge. With Firebase Test Lab, testing 
 
 2. `ARG SPEC File`: A YAML argument file that lists out all of the configurations for Firebase Test Lab. In this file, you can specify the test APK, filter the tests, select virtual or physical devices and indicate the type of test to perform.
 
+3. Instead of file string of arguments can be used
 
 <br>
 
 ## Usage
-workflows/main.yml:
+workflows/main.yml (with arguments):
+
+```
+name: Android CI
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the repository
+      - uses: actions/checkout@v2
+
+      # Run the Firebase Test Lab Action
+      - name: Run tests on Firebase Test Lab
+        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        with:
+          arg-spec: '--type=instrumentation --timeout=40m --app=build/debug.apk --test=build/debug-androidTest.apk --project=[your firebase project] --results-bucket="[your bucket]" --use-orchestrator --device=model=MediumPhone.arm,version=31,locale=en --client-details=matrixLabel="Android UI" --num-flaky-test-attempts=1 --num-uniform-shards=2'
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
+```
+
+workflows/main.yml (with yaml file):
 ```
 name: Android CI
 on: [push]
