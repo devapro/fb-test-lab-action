@@ -7,10 +7,6 @@ A GitHub Action to test mobile applications (Android, iOS) using Firebase Test L
 
 <br>
 
-![](docs/assets/preview.png)
-
-<br>
-
 ## Introduction
 
 Testing mobile applications can be a challenge. With Firebase Test Lab, testing becomes much easier whether it's validating new changes on a continuous integration (CI) pipeline or tracking down bugs on specific devices. This GitHub Action automates the setup of the gcloud command line tool and provides an easy interface to start testing quickly.
@@ -43,7 +39,7 @@ jobs:
 
       # Run the Firebase Test Lab Action
       - name: Run tests on Firebase Test Lab
-        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        uses: devapro/fb-test-lab-action@v0.2
         with:
           arg-spec: '--type=instrumentation --timeout=40m --app=build/debug.apk --test=build/debug-androidTest.apk --project=[your firebase project] --results-bucket="[your bucket]" --use-orchestrator --device=model=MediumPhone.arm,version=31,locale=en --client-details=matrixLabel="Android UI" --num-flaky-test-attempts=1 --num-uniform-shards=2'
         env:
@@ -64,7 +60,7 @@ jobs:
 
       # Run the Firebase Test Lab Action
       - name: Run tests on Firebase Test Lab
-        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        uses: devapro/fb-test-lab-action@v0.2
         with:
           arg-spec: 'tests.yml:android-pixel-4'
         env:
