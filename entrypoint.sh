@@ -1,6 +1,7 @@
 #! /bin/bash
 
 set -e
+set -x
 
 if [ -z "$SERVICE_ACCOUNT" ]; then
   echo "Service account is required to authorize gcloud to access the Cloud Platform."
