@@ -28,7 +28,7 @@ else
     echo "Test matrix exited abnormally with non-zero exit code: " $status
 fi
 
-echo "FIREBASE_TL_OUTPUT=$(echo $firebase_test_lab_output)" >> $GITHUB_ENV
+echo "run-log=$firebase_test_lab_output" >> $GITHUB_OUTPUT
 
 rm $service_account_file
 

@@ -5,6 +5,9 @@ inputs:
   arg-spec:
     description: 'string of arguments.'
     required: true
+outputs:
+  run-log:
+    description: 'Logs of test run'
 runs:
   using: 'docker'
   image: 'Dockerfile'
