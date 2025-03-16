@@ -19,7 +19,7 @@ project_id=$(cat $service_account_file | jq -r ".project_id")
 gcloud auth activate-service-account --key-file=$service_account_file
 gcloud config set project $project_id
 
-firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec)
+firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
 
 if [ $? -eq 0 ]; then
     echo "Test matrix successfully finished"
