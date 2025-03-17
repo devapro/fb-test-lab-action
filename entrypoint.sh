@@ -21,14 +21,16 @@ gcloud config set project $project_id
 
 firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
 
+echo "run-log<<EOF" >> $GITHUB_OUTPUT
+echo "$firebase_test_lab_output" >> $GITHUB_OUTPUT
+echo "EOF" >> $GITHUB_OUTPUT
+
 if [ $? -eq 0 ]; then
     echo "Test matrix successfully finished"
 else
     status=$?
     echo "Test matrix exited abnormally with non-zero exit code: " $status
 fi
-
-echo "run-log=$firebase_test_lab_output" >> $GITHUB_OUTPUT
 
 rm $service_account_file
 
