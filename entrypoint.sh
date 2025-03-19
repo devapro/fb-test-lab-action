@@ -48,4 +48,4 @@ fi
 
 rm $service_account_file
 
-exit $status
+echo "FTL_TEST_STATUS=$status" >> $GITHUB_OUTPUT
