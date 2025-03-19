@@ -19,19 +19,26 @@ project_id=$(cat $service_account_file | jq -r ".project_id")
 gcloud auth activate-service-account --key-file=$service_account_file
 gcloud config set project $project_id
 
-# firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
+firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
 
-firebase_test_lab_output=$(curl https://example.com 2>&1)
+report_url=$(echo "$firebase_test_lab_output" | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+# Check if a URL was found
+if [ -n "$report_url" ]; then
+  echo "Test Results URL: $report_url" >> $GITHUB_STEP_SUMMARY
+  echo "FTL_REPORT_URL=$report_url" >> $GITHUB_OUTPUT
+else
+  echo "No test results URL found in the text." >> $GITHUB_STEP_SUMMARY
+fi
 
-echo "run-log<<EOF" >> $GITHUB_OUTPUT
-echo "$firebase_test_lab_output" >> $GITHUB_OUTPUT
-echo "EOF" >> $GITHUB_OUTPUT
+gcp_url=$(echo "$firebase_test_lab_output" | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+# Check if a URL was found
+if [ -n "$gcp_url" ]; then
+  echo "Test Results URL: $gcp_url" >> $GITHUB_STEP_SUMMARY
+  echo "FTL_GCP_URL=$gcp_url" >> $GITHUB_OUTPUT
+else
+  echo "No test results URL found in the text." >> $GITHUB_STEP_SUMMARY
+fi
 
-{
-  echo 'FTL_RUN_LOG<<EOF'
-  echo "$firebase_test_lab_output"
-  echo EOF
-} >> "$GITHUB_ENV"
 
 if [ $? -eq 0 ]; then
     echo "Test matrix successfully finished"
