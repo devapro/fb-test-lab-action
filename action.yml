@@ -5,6 +5,11 @@ inputs:
   arg-spec:
     description: 'string of arguments.'
     required: true
+outputs:
+  FTL_REPORT_URL:
+    description: 'Report URL'
+  FTL_GCP_URL:
+    description: 'Test artifacts URL'
 runs:
   using: 'docker'
   image: 'Dockerfile'
