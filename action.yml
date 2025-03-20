@@ -10,6 +10,10 @@ outputs:
     description: 'Report URL'
   FTL_GCP_URL:
     description: 'Test artifacts URL'
+  FTL_ERROR_MESSAGE:
+    description: 'Error message'
+  FTL_TEST_STATUS:
+    description: 'Status of test execution'
 runs:
   using: 'docker'
   image: 'Dockerfile'
