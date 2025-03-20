@@ -19,9 +19,10 @@ project_id=$(cat $service_account_file | jq -r ".project_id")
 gcloud auth activate-service-account --key-file=$service_account_file
 gcloud config set project $project_id
 
-firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
+# firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
+gcloud beta firebase test android run $arg_spec > gcloud_output.log 2>&1
 
-report_url=$(echo "$firebase_test_lab_output" | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+report_url=$(cat gcloud_output.log | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 # Check if a URL was found
 if [ -n "$report_url" ]; then
   echo "FTL_REPORT_URL=$report_url" >> $GITHUB_OUTPUT
@@ -29,7 +30,7 @@ else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
-gcp_url=$(echo "$firebase_test_lab_output" | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+gcp_url=$(cat gcloud_output.log | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
   echo "FTL_GCP_URL=$gcp_url" >> $GITHUB_OUTPUT
