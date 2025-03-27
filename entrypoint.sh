@@ -20,7 +20,7 @@ gcloud auth activate-service-account --key-file=$service_account_file
 gcloud config set project $project_id
 
 # firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
-gcloud beta firebase test android run $arg_spec > gcloud_output.log
+gcloud beta firebase test android run --format=text $arg_spec > gcloud_output.log 2>&1
 
 report_url=$(cat gcloud_output.log | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 # Check if a URL was found
