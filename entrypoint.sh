@@ -1,6 +1,5 @@
 #! /bin/bash
 
-set -e
 set -x
 
 if [ -z "$SERVICE_ACCOUNT" ]; then
