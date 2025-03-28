@@ -22,6 +22,12 @@ gcloud config set project $project_id
 # firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
 gcloud beta firebase test android run --format=text $arg_spec > gcloud_output.log 2>&1
 
+echo "22222"
+
+cat gcloud_output.log
+
+echo "11111"
+
 report_url=$(cat gcloud_output.log | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 # Check if a URL was found
 if [ -n "$report_url" ]; then
