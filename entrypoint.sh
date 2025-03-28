@@ -27,15 +27,9 @@ echo "5555"
 
 echo $firebase_test_lab_output
 
-echo $firebase_test_lab_output > gcloud_output.log
-
-echo "22222"
-
-cat gcloud_output.log
-
 echo "11111"
 
-report_url=$(cat gcloud_output.log | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+report_url=$(echo $firebase_test_lab_output | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 # Check if a URL was found
 if [ -n "$report_url" ]; then
   echo "FTL_REPORT_URL=$report_url"
@@ -44,7 +38,7 @@ else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
-gcp_url=$(cat gcloud_output.log | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+gcp_url=$(echo $firebase_test_lab_output | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
   echo "FTL_GCP_URL=$gcp_url"
