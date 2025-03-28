@@ -19,10 +19,14 @@ project_id=$(cat $service_account_file | jq -r ".project_id")
 gcloud auth activate-service-account --key-file=$service_account_file
 gcloud config set project $project_id
 
-# firebase_test_lab_output=$(gcloud beta firebase test android run $arg_spec 2>&1)
+firebase_test_lab_output=$(gcloud beta firebase test android run --format=text $arg_spec 2>&1)
 #gcloud beta firebase test android run --format=text $arg_spec > gcloud_output.log 2>&1
 
-echo $arg_spec > gcloud_output.log
+echo "5555"
+
+echo $firebase_test_lab_output
+
+echo $firebase_test_lab_output > gcloud_output.log
 
 echo "22222"
 
