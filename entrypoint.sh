@@ -22,7 +22,10 @@ firebase_test_lab_output=$(gcloud beta firebase test android run --format=text $
 
 echo $firebase_test_lab_output
 
+firebase_test_lab_output=$(echo "$firebase_test_lab_output" | tr -d '\n')
+
 report_url=$(echo $firebase_test_lab_output | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+echo "Extracted Report URL: '$report_url'"
 # Check if a URL was found
 if [ -n "$report_url" ]; then
   echo "FTL_REPORT_URL=$report_url" >> $GITHUB_OUTPUT
@@ -31,6 +34,7 @@ else
 fi
 
 gcp_url=$(echo $firebase_test_lab_output | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+echo "Extracted GCP URL: '$gcp_url'"
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
   echo "FTL_GCP_URL=$gcp_url" >> $GITHUB_OUTPUT
