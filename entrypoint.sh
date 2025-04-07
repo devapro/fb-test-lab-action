@@ -20,11 +20,20 @@ gcloud config set project $project_id
 
 firebase_test_lab_output=$(gcloud beta firebase test android run --format=text $arg_spec 2>&1)
 
+if [ $? -eq 0 ]; then
+    echo "Test matrix successfully finished"
+else
+    status=$?
+    echo "Test matrix exited abnormally with non-zero exit code: " $status
+fi
+
 echo $firebase_test_lab_output
 
 firebase_test_lab_output=$(echo "$firebase_test_lab_output" | tr -d '\n')
 
-report_url=$(echo $firebase_test_lab_output | awk -F'[][]' '/Test results will be streamed to/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+report_url=$(echo "$firebase_test_lab_output" | \
+                grep -Eo 'https://console\.firebase\.google\.com[^ ]+' | \
+                sed 's/\.$//')
 echo "Extracted Report URL: '$report_url'"
 # Check if a URL was found
 if [ -n "$report_url" ]; then
@@ -33,7 +42,9 @@ else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
-gcp_url=$(echo $firebase_test_lab_output | awk -F'[][]' '/Raw results will be stored in your GCS bucket at/ {print $2}' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+gcp_url=$(echo "$firebase_test_lab_output" | \
+             grep -Eo 'https://console\.developers\.google\.com/storage/browser[^ ]+' | \
+             sed 's/\.$//')
 echo "Extracted GCP URL: '$gcp_url'"
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
@@ -42,15 +53,8 @@ else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
-if [ $? -eq 0 ]; then
-    echo "Test matrix successfully finished"
-else
-    status=$?
-    echo "Test matrix exited abnormally with non-zero exit code: " $status
-fi
-
 rm $service_account_file
 
-echo "FTL_TEST_STATUS=$firebase_test_lab_output" >> $GITHUB_OUTPUT
+echo "FTL_TEST_STATUS=$status" >> $GITHUB_OUTPUT
 
-exit $status
+exit 0
