@@ -43,7 +43,7 @@ else
 fi
 
 gcp_url=$(echo "$firebase_test_lab_output" | \
-             grep -Eo 'https://console\.developers\.google\.com/storage/browser[^ ]+' | \
+             grep -Eo 'https://console\.developers\.google\.com[^ ]+' | \
              sed 's/\.$//')
 echo "Extracted GCP URL: '$gcp_url'"
 # Check if a URL was found
@@ -55,6 +55,7 @@ fi
 
 rm $service_account_file
 
+echo "FTL_TEST_LOGS=$firebase_test_lab_output" >> $GITHUB_OUTPUT
 echo "FTL_TEST_STATUS=$status" >> $GITHUB_OUTPUT
 
 exit 0
