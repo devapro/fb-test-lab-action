@@ -55,7 +55,6 @@ fi
 
 rm $service_account_file
 
-echo "FTL_TEST_LOGS=$firebase_test_lab_output" >> $GITHUB_OUTPUT
 echo "FTL_TEST_STATUS=$status" >> $GITHUB_OUTPUT
 
 exit 0

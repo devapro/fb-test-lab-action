@@ -14,8 +14,6 @@ outputs:
     description: 'Error message'
   FTL_TEST_STATUS:
     description: 'Status of test execution'
-  FTL_TEST_LOGS:
-    description: 'Logs of test execution'
 runs:
   using: 'docker'
   image: 'Dockerfile'
