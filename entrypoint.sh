@@ -27,28 +27,28 @@ else
     echo "Test matrix exited abnormally with non-zero exit code: " $status
 fi
 
-#echo $firebase_test_lab_output
-
 firebase_test_lab_output_line=$(echo "$firebase_test_lab_output" | tr -d '\n')
 
 gcp_url=$(echo "$firebase_test_lab_output_line" | \
              grep -Eo 'https://console\.developers\.google\.com[^ ]+' | \
-             sed 's/\.$//')
+             sed 's/\]Test//' | sed 's/\.$//')
 echo "Extracted GCP URL: '$gcp_url'"
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
-  echo "FTL_GCP_URL=$gcp_url" >> $GITHUB_OUTPUT
+  DECODED_URL=$(echo "$gcp_url" | sed 's/%3A/:/g')
+  echo "FTL_GCP_URL=$DECODED_URL" >> $GITHUB_OUTPUT
 else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
 report_url=$(echo "$firebase_test_lab_output_line" | \
                 grep -Eo 'https://console\.firebase\.google\.com[^ ]+' | \
-                sed 's/\.$//')
+                sed 's/\]Test//' | sed 's/\.$//')
 echo "Extracted Report URL: '$report_url'"
 # Check if a URL was found
 if [ -n "$report_url" ]; then
-  echo "FTL_REPORT_URL=$report_url" >> $GITHUB_OUTPUT
+  DECODED_URL=$(echo "$report_url" | sed 's/%3A/:/g')
+  echo "FTL_REPORT_URL=$DECODED_URL" >> $GITHUB_OUTPUT
 else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
