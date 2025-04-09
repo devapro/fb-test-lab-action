@@ -37,7 +37,7 @@ report_url=$(echo "$firebase_test_lab_output_line" | \
 echo "Extracted Report URL: '$report_url'"
 # Check if a URL was found
 if [ -n "$report_url" ]; then
-  echo "FTL_REPORT_URL=$report_url" >> $GITHUB_OUTPUT
+  echo "FTL_REPORT_URL=\"$report_url\"" >> $GITHUB_OUTPUT
 else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
@@ -48,7 +48,7 @@ gcp_url=$(echo "$firebase_test_lab_output_line" | \
 echo "Extracted GCP URL: '$gcp_url'"
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
-  echo "FTL_GCP_URL=$gcp_url" >> $GITHUB_OUTPUT
+  echo "FTL_GCP_URL=\"$gcp_url\"" >> $GITHUB_OUTPUT
 else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
