@@ -27,11 +27,11 @@ else
     echo "Test matrix exited abnormally with non-zero exit code: " $status
 fi
 
-echo $firebase_test_lab_output
+#echo $firebase_test_lab_output
 
-firebase_test_lab_output=$(echo "$firebase_test_lab_output" | tr -d '\n')
+firebase_test_lab_output_line=$(echo "$firebase_test_lab_output" | tr -d '\n')
 
-report_url=$(echo "$firebase_test_lab_output" | \
+report_url=$(echo "$firebase_test_lab_output_line" | \
                 grep -Eo 'https://console\.firebase\.google\.com[^ ]+' | \
                 sed 's/\.$//')
 echo "Extracted Report URL: '$report_url'"
@@ -42,7 +42,7 @@ else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
-gcp_url=$(echo "$firebase_test_lab_output" | \
+gcp_url=$(echo "$firebase_test_lab_output_line" | \
              grep -Eo 'https://console\.developers\.google\.com[^ ]+' | \
              sed 's/\.$//')
 echo "Extracted GCP URL: '$gcp_url'"
