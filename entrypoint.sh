@@ -51,7 +51,7 @@ report_url=$(echo "$firebase_test_lab_output_line" | \
 echo "Extracted Report URL: '$report_url'"
 # Check if a URL was found
 if [ -n "$report_url" ]; then
-  CLEANED_URL=$(echo "$gcp_url" | sed 's/%3A/:/g' | sed 's/%2F/\//g')
+  CLEANED_URL=$(echo "$report_url" | sed 's/%3A/:/g' | sed 's/%2F/\//g')
   # Remove any trailing newlines or spaces
   CLEANED_URL=$(echo "$CLEANED_URL" | tr -d '\n' | xargs)
   echo "FTL_REPORT_URL=$CLEANED_URL" >> $GITHUB_OUTPUT
