@@ -31,24 +31,30 @@ firebase_test_lab_output_line=$(echo "$firebase_test_lab_output" | tr -d '\n')
 
 gcp_url=$(echo "$firebase_test_lab_output_line" | \
              grep -Eo 'https://console\.developers\.google\.com[^ ]+' | \
+             head -n 1 | \
              sed 's/\]Test//' | sed 's/\.$//')
 echo "Extracted GCP URL: '$gcp_url'"
 # Check if a URL was found
 if [ -n "$gcp_url" ]; then
-  DECODED_URL=$(echo "$gcp_url" | sed 's/%3A/:/g')
-  echo "FTL_GCP_URL=$DECODED_URL" >> $GITHUB_OUTPUT
+  CLEANED_URL=$(echo "$gcp_url" | sed 's/%3A/:/g' | sed 's/%2F/\//g')
+  # Remove any trailing newlines or spaces
+  CLEANED_URL=$(echo "$CLEANED_URL" | tr -d '\n' | xargs)
+  echo "FTL_GCP_URL=$CLEANED_URL" >> $GITHUB_OUTPUT
 else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
 
 report_url=$(echo "$firebase_test_lab_output_line" | \
                 grep -Eo 'https://console\.firebase\.google\.com[^ ]+' | \
+                head -n 1 | \
                 sed 's/\]Test//' | sed 's/\.$//')
 echo "Extracted Report URL: '$report_url'"
 # Check if a URL was found
 if [ -n "$report_url" ]; then
-  DECODED_URL=$(echo "$report_url" | sed 's/%3A/:/g')
-  echo "FTL_REPORT_URL=$DECODED_URL" >> $GITHUB_OUTPUT
+  CLEANED_URL=$(echo "$gcp_url" | sed 's/%3A/:/g' | sed 's/%2F/\//g')
+  # Remove any trailing newlines or spaces
+  CLEANED_URL=$(echo "$CLEANED_URL" | tr -d '\n' | xargs)
+  echo "FTL_REPORT_URL=$CLEANED_URL" >> $GITHUB_OUTPUT
 else
   echo "FTL_ERROR_MESSAGE=\"No test results URL found in the text.\"" >> $GITHUB_OUTPUT
 fi
