@@ -1,10 +1,19 @@
-name: 'Firebase Test Lab Action'
-description: 'A GitHub Action to test mobile applications (Android, iOS) using Firebase Test Lab.'
+name: 'Firebase Test Lab Android Action'
+description: 'A GitHub Action to test mobile applications (Android) using Firebase Test Lab.'
 author: 'Asad Mansoor'
 inputs:
   arg-spec:
-    description: 'a YAML formatted file that includes arguments for gcloud firebase test run command.'
+    description: 'string of arguments.'
     required: true
+outputs:
+  FTL_REPORT_URL:
+    description: 'Report URL'
+  FTL_GCP_URL:
+    description: 'Test artifacts URL'
+  FTL_ERROR_MESSAGE:
+    description: 'Error message'
+  FTL_TEST_STATUS:
+    description: 'Status of test execution'
 runs:
   using: 'docker'
   image: 'Dockerfile'

@@ -1,17 +1,6 @@
 # Firebase Test Lab GitHub Action
 
-[![Release](https://img.shields.io/github/release/asadmansr/Firebase-Test-Lab-Action.svg)](https://github.com/asadmansr/Firebase-Test-Lab-Action/releases)
-[![Marketplace](https://img.shields.io/badge/GitHub-Marketplace-blue.svg)](https://github.com/marketplace/actions/firebase-test-lab-action)
-
-A GitHub Action to test mobile applications (Android, iOS) using Firebase Test Lab.
-
-<br>
-
-![](docs/assets/preview.png)
-
-<br>
-
-Inspired by the 2020 [GitHub Actions Hackathon.](https://github.community/t5/Events/Featured-Event-GitHub-Actions-Hackathon/td-p/48206)
+A GitHub Action to test mobile applications (Android) using Firebase Test Lab.
 
 <br>
 
@@ -25,13 +14,13 @@ Testing mobile applications can be a challenge. With Firebase Test Lab, testing 
 
 1. `Service Account`: A service account is a special kind of account with specific permissions to authenticate with the Cloud Platform when used on a virtual machine for continuous integration.
 
-2. `ARG SPEC File`: A YAML argument file that lists out all of the configurations for Firebase Test Lab. In this file, you can specify the test APK, filter the tests, select virtual or physical devices and indicate the type of test to perform.
-
+2. `ARG SPEC`: lists out all of the configurations for Firebase Test Lab. You can specify the test APK, filter the tests, select virtual or physical devices and indicate the type of test to perform.
 
 <br>
 
 ## Usage
-workflows/main.yml:
+workflows/main.yml (with arguments):
+
 ```
 name: Android CI
 on: [push]
@@ -45,24 +34,11 @@ jobs:
 
       # Run the Firebase Test Lab Action
       - name: Run tests on Firebase Test Lab
-        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        uses: devapro/fb-test-lab-action@v0.2
         with:
-          arg-spec: 'tests.yml:android-pixel-4'
+          arg-spec: '--type=instrumentation --timeout=40m --app=build/debug.apk --test=build/debug-androidTest.apk --project=[your firebase project] --results-bucket="[your bucket]" --use-orchestrator --device=model=MediumPhone.arm,version=31,locale=en --client-details=matrixLabel="Android UI" --num-flaky-test-attempts=1 --num-uniform-shards=2'
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
-```
-
-tests.yml:
-```
-android-pixel-4:
-  type: instrumentation
-  app: app-debug.apk
-  test: app-debug-test.apk
-  device:
-    - model: flame
-      version: 29
-      locale: 'en'
-      orientation: portrait
 ```
 
 <br>
@@ -77,13 +53,31 @@ Currently, this GitHub Action only runs Android tests. Support for iOS coming so
 
 #### `arg-spec`
 
-YAML file that contains configuration for Firebase Test Lab. Format must be ARG_FILE:ARG_GROUP_NAME. **Required**
+Configuration for Firebase Test Lab. **Required**
 
 #### `SERVICE_ACCOUNT`
 
 Copy-paste the content of the JSON-formatted service account file in GitHub's secret variables in settings. **Required**
 
 <br>
+
+## Outputs
+
+#### `FTL_REPORT_URL`
+
+URL of Firebase test results report
+
+#### `FTL_GCP_URL`
+
+URL of Google clound tests raw results
+
+#### `FTL_ERROR_MESSAGE`
+
+Error message, if action can't find Firebase or Google Cloud url
+
+#### `FTL_TEST_STATUS`
+
+Status of action. Action finished always with code 0, but code of test command is saved in this output variable
 
 ## Contributing
 

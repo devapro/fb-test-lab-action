@@ -1,6 +1,6 @@
-FROM google/cloud-sdk:283.0.0-alpine
+FROM google/cloud-sdk:latest
 
-RUN apk update && apk add --no-cache jq
+RUN apt update && apt install -y jq
 
 COPY entrypoint.sh /entrypoint.sh
 
