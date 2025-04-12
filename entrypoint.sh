@@ -1,13 +1,15 @@
 #! /bin/bash
 
-set -x
+status=0
 
 if [ -z "$SERVICE_ACCOUNT" ]; then
   echo "Service account is required to authorize gcloud to access the Cloud Platform."
-  exit 2
+  status=2
+  echo "FTL_TEST_STATUS=$status" >> $GITHUB_OUTPUT
+  exit $status
 fi
 
-status=0
+
 arg_spec=$1
 service_account_file=/opt/service_account.json
 
