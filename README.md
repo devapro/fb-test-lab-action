@@ -21,7 +21,7 @@ Testing mobile applications can be a challenge. With Firebase Test Lab, testing 
 ## Usage
 workflows/main.yml (with arguments):
 
-```
+```yaml
 name: Android CI
 on: [push]
 
@@ -34,18 +34,49 @@ jobs:
 
       # Run the Firebase Test Lab Action
       - name: Run tests on Firebase Test Lab
-        uses: devapro/fb-test-lab-action@v0.2
+        uses: devapro/fb-test-lab-action@v0.4
         with:
-          arg-spec: '--type=instrumentation --timeout=40m --app=build/debug.apk --test=build/debug-androidTest.apk --project=[your firebase project] --results-bucket="[your bucket]" --use-orchestrator --device=model=MediumPhone.arm,version=31,locale=en --client-details=matrixLabel="Android UI" --num-flaky-test-attempts=1 --num-uniform-shards=2'
+          arg-spec: >-
+            --type=instrumentation
+            --timeout=40m
+            --app=build/debug.apk
+            --test=build/debug-androidTest.apk
+            --project=[your firebase project]
+            --results-bucket=[your bucket]
+            --use-orchestrator
+            --device=model=MediumPhone.arm,version=31,locale=en
+            --client-details=matrixLabel="Android UI"
+            --num-flaky-test-attempts=1
+            --num-uniform-shards=2
         env:
           SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
 ```
+
+**Important Notes:**
+- Use `>-` for multiline YAML strings to fold lines into a single string
+- Do NOT include `--arg-spec` in your arguments - this is the GitHub Actions input name, not a gcloud flag
+- Arguments are passed directly to `gcloud firebase test android run`
+- All standard gcloud firebase test android run flags are supported
 
 <br>
 
 The following usage comes with additional instructions regarding the input and environment variables that can be found in the [Simple Usage Documentation](/docs/SIMPLE_USAGE.md).
 
 Currently, this GitHub Action only runs Android tests. Support for iOS coming soon.
+
+<br>
+
+## Local Testing
+
+Before deploying changes to the action, you can test it locally using the `test.sh` script:
+
+```bash
+# Make sure you have a service_account.json file (never commit this!)
+# Run the test script with your arguments
+./test.sh "--type=instrumentation --timeout=30m --app=path/to/app.apk --test=path/to/test.apk --device=model=Pixel2,version=28"
+```
+
+The script will build the Docker image and run the action locally with your service account and test parameters.
 
 <br>
 
