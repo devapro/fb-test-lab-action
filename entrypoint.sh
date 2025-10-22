@@ -20,13 +20,14 @@ project_id=$(cat $service_account_file | jq -r ".project_id")
 gcloud auth activate-service-account --key-file=$service_account_file
 gcloud config set project $project_id
 
-firebase_test_lab_output=$(gcloud beta firebase test android run --format=text $arg_spec 2>&1)
+firebase_test_lab_output=$(gcloud firebase test android run --format=text $arg_spec 2>&1)
 
 if [ $? -eq 0 ]; then
     echo "Test matrix successfully finished"
 else
     status=$?
     echo "Test matrix exited abnormally with non-zero exit code: " $status
+    echo "$firebase_test_lab_output"
 fi
 
 firebase_test_lab_output_line=$(echo "$firebase_test_lab_output" | tr -d '\n')
