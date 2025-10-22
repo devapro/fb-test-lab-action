@@ -28,6 +28,7 @@ else
     status=$?
     echo "Test matrix exited abnormally with non-zero exit code: " $status
     echo "$firebase_test_lab_output"
+    echo "$arg_spec"
 fi
 
 firebase_test_lab_output_line=$(echo "$firebase_test_lab_output" | tr -d '\n')
