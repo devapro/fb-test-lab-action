@@ -22,7 +22,7 @@ gcloud config set project $project_id
 
 echo "Running gcloud command with arguments: $arg_spec"
 
-firebase_test_lab_output=$(eval "gcloud firebase test android run --format=text $arg_spec" 2>&1)
+firebase_test_lab_output=$(eval "gcloud beta firebase test android run --format=text $arg_spec" 2>&1)
 
 if [ $? -eq 0 ]; then
     echo "Test matrix successfully finished"
